@@ -101,28 +101,31 @@ const HomepageLayout = () => (
         <Segment style={{ padding: "8em 0em" }} vertical>
             <Grid container stackable verticalAlign="middle">
                 <Grid.Row>
-                    <Grid.Column width={8} >
+                    <Grid.Column width={8} textAlign="center">
                         <Header as="h1"
-                            style={
-                                { fontSize: "2.5em" }} >
+                            style={{ fontSize: "2.5em" }} >
                             Sunshine Life & Health Advisors {" "}
                         </Header>{" "}
                         <p style={{ fontSize: "1.33em" }} > </p>{" "} <Header as="h3" style={{ fontSize: "1.50em" }} > We Make Personalized Business Cards and Flyers {" "}
                         </Header>{" "}
                         <p style={{ fontSize: "1.20em" }} > Choose and fill out an order form below {" "} </p>{" "}
-                        <Dropdown placeholder='Select choice' scrolling options={options} />
+                        <Dropdown
+                            placeholder='Select choice'
+                            fluid
+                            selection
+                            options={options} />
                     </Grid.Column>{" "}
-                    <Grid.Column floated="right" width={6}>
+                    {/* <Grid.Column floated="right" width={6}>
                         <Image
                             rounded
                             size="large"
                             src='./logo.png'
                         />
-                    </Grid.Column>
+                    </Grid.Column> */}
                 </Grid.Row>
                 <Grid.Row>
                     <Grid.Column textAlign="center">
-                        <Button size="huge">Check Them Out</Button>
+                        <Button size="huge">Fill Out Form</Button>
                     </Grid.Column>
                 </Grid.Row>
             </Grid>
@@ -160,38 +163,16 @@ const HomepageLayout = () => (
             </Grid>
         </Segment>
         <Segment style={{ padding: "8em 0em" }} vertical>
-            <Container text>
+            <Container text textAlign="center">
                 <Header as="h3" style={{ fontSize: "2em" }}>
-                    Breaking The Grid, Grabs Your Attention
-        </Header>
+                    About The Designer/Company
+                </Header>
                 <p style={{ fontSize: "1.33em" }}>
-                    Instead of focusing on content creation and hard work, we have learned
-                    how to master the art of doing nothing by providing massive amounts of
-                    whitespace and generic content that can seem massive, monolithic and
-                    worth your attention.
-        </p>
+                    Insert text about designer/company
+                </p>
                 <Button as="a" size="large">
                     Read More
-        </Button>
-                <Divider
-                    as="h4"
-                    className="header"
-                    horizontal
-                    style={{ margin: "3em 0em", textTransform: "uppercase" }}
-                >
-                    <a href="#">Case Studies</a>
-                </Divider>
-                <Header as="h3" style={{ fontSize: "2em" }}>
-                    Did We Tell You About Our Bananas?
-        </Header>
-                <p style={{ fontSize: "1.33em" }}>
-                    Yes I know you probably disregarded the earlier boasts as non-sequitur
-                    filler content, but it's really true. It took years of gene splicing
-                    and combinatory DNA research, but our bananas can really dance.
-        </p>
-                <Button as="a" size="large">
-                    I'm Still Quite Interested
-        </Button>
+                </Button>
             </Container>
         </Segment>
     </ResponsiveContainer >

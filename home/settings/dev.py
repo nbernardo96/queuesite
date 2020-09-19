@@ -10,12 +10,12 @@ WSGI_APPLICATION = 'home.wsgi.dev.application'
 # Database setup
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.postgresql_psycopg2',
+        'ENGINE': 'django.db.backends.mysql',
         'NAME': 'sunshine_health',
-        'USER': 'postgres',
-        'PASSWORD': 'postgres',
+        'USER': 'root',
+        'PASSWORD': 'mysql',
         'HOST': '127.0.0.1',
-        'PORT': '53021',
+        'PORT': '3306',
     }
 }
 
