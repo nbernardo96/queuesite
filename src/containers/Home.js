@@ -165,14 +165,15 @@ const HomepageLayout = () => (
         <Segment style={{ padding: "8em 0em" }} vertical>
             <Container text textAlign="center">
                 <Header as="h3" style={{ fontSize: "2em" }}>
-                    About The Designer/Company
+                    Tony's Design Queue
+                </Header>
+                <Header as="h4" style={{ fontSize: "2em" }}>
+                    El queue de diseño para Tony
                 </Header>
                 <p style={{ fontSize: "1.33em" }}>
-                    Insert text about designer/company
+                    Please, only use this when necessary.
+                    <p>Por favor, utiliza esto cuando sea necessario.</p>
                 </p>
-                <Button as="a" size="large">
-                    Read More
-                </Button>
             </Container>
         </Segment>
     </ResponsiveContainer >
