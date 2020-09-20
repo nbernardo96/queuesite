@@ -14,7 +14,8 @@ import {
     Segment,
     Sidebar,
     Visibility,
-    Dropdown
+    Dropdown,
+    Modal
 } from "semantic-ui-react";
 
 import flyer from './images/flyer-img.png';
@@ -96,8 +97,16 @@ ResponsiveContainer.propTypes = {
     children: PropTypes.node
 };
 
+// function Welcome(props) {
+//     return <Header>You chose, {props.options}</Header>
+// }
+
+function HandleDropdown(props) {
+    return <h1>You chose, {props.option}</h1>;
+}
+
 const HomepageLayout = () => (
-    <ResponsiveContainer>
+    < ResponsiveContainer >
         <Segment style={{ padding: "8em 0em" }} vertical>
             <Grid container stackable verticalAlign="middle">
                 <Grid.Row>
@@ -109,23 +118,24 @@ const HomepageLayout = () => (
                         <p style={{ fontSize: "1.33em" }} > </p>{" "} <Header as="h3" style={{ fontSize: "1.50em" }} > We Make Personalized Business Cards and Flyers {" "}
                         </Header>{" "}
                         <p style={{ fontSize: "1.20em" }} > Choose and fill out an order form below {" "} </p>{" "}
-                        <Dropdown
-                            placeholder='Select choice'
-                            fluid
-                            selection
-                            options={options} />
+
                     </Grid.Column>{" "}
-                    {/* <Grid.Column floated="right" width={6}>
-                        <Image
-                            rounded
-                            size="large"
-                            src='./logo.png'
-                        />
-                    </Grid.Column> */}
                 </Grid.Row>
                 <Grid.Row>
                     <Grid.Column textAlign="center">
-                        <Button size="huge">Fill Out Form</Button>
+                        <Modal trigger={<Button size="large">Fill Out Form</Button>}>
+                            <Modal.Header>Choose A Form</Modal.Header>
+                            <Modal.Content Dropdown>
+                                <Dropdown
+                                    placeholder='Select choice'
+                                    fluid
+                                    selection
+                                    options={options} />{"\n"}
+                            </Modal.Content>
+                            <Modal.Content>
+
+                            </Modal.Content>
+                        </Modal>
                     </Grid.Column>
                 </Grid.Row>
             </Grid>
@@ -178,4 +188,5 @@ const HomepageLayout = () => (
         </Segment>
     </ResponsiveContainer >
 );
+
 export default HomepageLayout;
