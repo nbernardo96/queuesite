@@ -123,17 +123,20 @@ const HomepageLayout = () => (
                 </Grid.Row>
                 <Grid.Row>
                     <Grid.Column textAlign="center">
-                        <Modal trigger={<Button size="large">Fill Out Form</Button>}>
-                            <Modal.Header>Choose A Form</Modal.Header>
+                        <Modal trigger={<Button size="large">Fill Out Form</Button>} closeIcon>
+                            <Modal.Header>
+                                Choose A Form
+                            </Modal.Header>
                             <Modal.Content Dropdown>
                                 <Dropdown
                                     placeholder='Select choice'
                                     fluid
+                                    compact
                                     selection
                                     options={options} />{"\n"}
                             </Modal.Content>
                             <Modal.Content>
-
+                                <Button>Select</Button>
                             </Modal.Content>
                         </Modal>
                     </Grid.Column>
