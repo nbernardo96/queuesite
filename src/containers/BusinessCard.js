@@ -163,9 +163,6 @@ const BusinessCardPage = () => (
                         <label style={{ fontSize: "20px" }}>Address</label>
                         <input placeholder='Address' />
                     </Form.Field>
-                    <Form.Field>
-                        <Checkbox label='I agree to the Terms and Conditions' />
-                    </Form.Field>
                     <Button type='submit'>Submit</Button>
                 </Form>
             </Container>

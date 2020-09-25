@@ -134,7 +134,7 @@ const FlyerPage = () => (
                         <input placeholder='Phone' />
                     </Form.Field>
                     <Form.Field>
-                        <Checkbox label='I agree to the Terms and Conditions' />
+                        <Checkbox style={{ fontSize: "20px" }} label='Make check payable to: SLHA' />
                     </Form.Field>
                     <Button type='submit'>Submit</Button>
                 </Form>
