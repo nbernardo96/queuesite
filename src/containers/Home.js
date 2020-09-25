@@ -8,6 +8,7 @@ import {
     Header,
     Icon,
     Image,
+    Label,
     List,
     Menu,
     Responsive,
@@ -21,6 +22,8 @@ import {
 import flyer from './images/flyer-img.png';
 import business_card_1 from './images/business-card-img-1.png'
 import business_card_2 from './images/business-card-img-2.png'
+import "./Login"
+// import {store} from "./../index"
 
 const options = [
     { key: 'business_card', text: 'Business Card', value: 1 },
@@ -101,7 +104,26 @@ function HandleDropdown(props) {
     return <h1>You chose, {props.option}</h1>;
 }
 
-const HomepageLayout = () => (
+
+
+class HomepageLayout extends Component {
+    constructor(){
+        super();
+        this.state = {
+            value: 1
+        }
+    }
+
+    handleChange = (e, { value }) => this.setState({ value })
+    reroute = (e) => {
+            if(this.state.value === 1){
+                window.location.href='/businesscard';
+            } else if(this.state.value === 2){
+                window.location.href='/flyer';
+            }
+    }
+
+    render = () => 
     < ResponsiveContainer >
         <Segment style={{ padding: "8em 0em" }} vertical>
             <Grid container stackable verticalAlign="middle">
@@ -123,16 +145,19 @@ const HomepageLayout = () => (
                             <Modal.Header>
                                 Choose A Form
                             </Modal.Header>
-                            <Modal.Content Dropdown>
+                            <Modal.Content>
                                 <Dropdown
                                     placeholder='Select choice'
                                     fluid
                                     compact
                                     selection
-                                    options={options} />{"\n"}
+                                    onChange={this.handleChange}
+                                    options={options} 
+                                    value={this.state.value}
+                                />{"\n"}
                             </Modal.Content>
                             <Modal.Content>
-                                <Button>Select</Button>
+                                <Button onClick={this.reroute}>Select</Button>
                             </Modal.Content>
                         </Modal>
                     </Grid.Column>
@@ -181,11 +206,12 @@ const HomepageLayout = () => (
                 </Header>
                 <p style={{ fontSize: "1.33em" }}>
                     Please, only use this when necessary.
-                    <p>Por favor, utiliza esto cuando sea necessario.</p>
                 </p>
+                <p>Por favor, utiliza esto cuando sea necessario.</p>
             </Container>
         </Segment>
     </ResponsiveContainer >
-);
+
+}
 
 export default HomepageLayout;
