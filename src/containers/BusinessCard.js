@@ -108,7 +108,7 @@ const BusinessCardPage = () => (
                     <Grid.Column width={8} textAlign="center">
                         <Header as="h1"
                             style={{ fontSize: "2.5em" }} >
-                            Flyer Form {" "}
+                            Business Card Form {" "}
                         </Header>{" "}
                         <Image
                             centered
