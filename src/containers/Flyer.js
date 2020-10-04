@@ -1,34 +1,36 @@
 import PropTypes from "prop-types";
 import React, { Component } from "react";
+import axios from "axios";
+
 import {
     Button,
     Container,
-    Divider,
     Grid,
     Header,
-    Icon,
     Image,
-    List,
-    Menu,
     Responsive,
     Segment,
     Sidebar,
     Visibility,
-    Dropdown,
-    Modal,
-    Checkbox,
     Form,
-    Label
+    Checkbox,
+    Message
 } from "semantic-ui-react";
 
 import flyer from './images/flyer-img.png';
-import business_card_1 from './images/business-card-img-1.png'
-import business_card_2 from './images/business-card-img-2.png'
 
-const options = [
-    { key: 'business_card', text: 'Business Card', value: 1 },
-    { key: 'flyer_poster', text: 'Flyer', value: 2 },
-]
+
+const initialState = {
+    success: '',
+    name: '',
+    phone: '',
+    payable_check: 'NO',
+    checked: false,
+    nameError: false,
+    phoneError: false,
+    checkError: false,
+    queues: []
+}
 
 const getWidth = () => {
     const isSSR = typeof window === "undefined";
@@ -101,71 +103,199 @@ ResponsiveContainer.propTypes = {
 };
 
 class FlyerPage extends Component {
-    constructor() {
-        super();
-        this.state = {
-            value: 1
+    constructor(props) {
+        super(props)
+
+        this.state = initialState       // set initial state of field values to empty, errors to false
+
+        this.handleChange = this.handleChange.bind(this);
+
+        this.handleSubmit = this.handleSubmit.bind(this)
+
+    }
+
+    // validate function checks if all required input form fields are filled out correctly
+    validate = () => {
+        if (this.state.name === '' || this.state.phone === '') {
+            if (this.state.name === '') {
+                this.setState({ nameError: true })
+            } else {
+                this.setState({ nameError: false })
+            }
+            if (this.state.phone === '') {
+                this.setState({ phoneError: true })
+            } else {
+                this.setState({ phoneError: false })
+            }
+            return false
+        } else {
+            return true
+        }
+    };
+
+    // function to uncheck the checkbox after user submits a form
+    unCheck = () => {
+        var checkbox = document.getElementsByClassName('.payable_check')
+        checkbox.checked = false
+    }
+
+    handleCheck = () => {
+        if (!this.state.checked) {
+            this.setState({ payable_check: 'YES' })
+        } else {
+            this.setState({ payable_check: 'NO' })
         }
     }
 
-    render = () => (
-        < ResponsiveContainer >
-            <Segment style={{ padding: "8em 0em 5em 0em" }} vertical>
-                <Grid container stackable verticalAlign="middle">
-                    <Grid.Row>
-                        <Grid.Column width={8} textAlign="center">
-                            <Header as="h1"
-                                style={{ fontSize: "2.5em" }} >
-                                Flyer Form {" "}
-                            </Header>{" "}
-                            <Image
-                                centered
-                                rounded
-                                size="medium"
-                                src={flyer}
-                            />
-                            <p style={{ fontSize: "1.33em" }} > </p>{" "}
-                        </Grid.Column>{" "}
-                    </Grid.Row>
-                </Grid>
-            </Segment>
-            <Segment style={{ padding: "5em 0em" }} vertical>
+    handleChangeCheckbox = () => {
+        this.setState({ checked: !this.state.checked });
+        this.handleCheck();
+    };
 
-                <Container>
-                    <Form>
-                        <Form.Field>
-                            <label style={{ fontSize: "20px" }}>Agent Name</label>
-                            <input placeholder='Agent Name' />
-                        </Form.Field>
-                        <Form.Field>
-                            <label style={{ fontSize: "20px" }}>Phone</label>
-                            <input placeholder='Phone' />
-                        </Form.Field>
-                        <Form.Field>
-                            <Checkbox style={{ fontSize: "20px" }} label='Make check payable to: SLHA' />
-                        </Form.Field>
-                        <Button type='submit'>Submit</Button>
-                    </Form>
-                </Container>
+    handleChange = e => {
+        this.setState({
+            [e.target.name]: e.target.value,
+        });
+    };
+
+    handleSubmit = event => {
+        event.preventDefault();
+
+        const queue = {
+            name: this.state.name,
+            phone: this.state.phone,                                // data to be submitted to database
+            payable_check: this.state.payable_check,
+        };
+
+        const isValid = this.validate();
+        if (isValid) {                                             // if all input fields are filled out correctly on submit, reset values and clear form
+            this.setState(initialState);                           // sets all input values back to empty string
+            event.target.reset();                                  // clears form on UI
+            this.unCheck()                                         // calls unCheck function to uncheck box
+        }
+
+        axios.post('http://127.0.0.1:8000/api/flyerqueues/', queue)      // sends post request to database
+            .then(res => {
+                console.log(res);
+                console.log(res.data);
+                this.setState({
+                    success: 'success'
+                });
+            })
+            .catch(e => {
+                console.log(e)
+                this.setState({
+                    success: 'error'
+                });
+            })
+    }
+
+    render() {
+        return (
+            < ResponsiveContainer >
+                <Segment style={{ padding: "8em 0em 5em 0em" }} vertical>
+                    <Grid container stackable verticalAlign="middle">
+                        <Grid.Row>
+                            <Grid.Column width={8} textAlign="center">
+                                <Header as="h1"
+                                    style={{ fontSize: "2.5em" }} >
+                                    Flyer Form {" "}
+                                </Header>{" "}
+                                <Image
+                                    centered
+                                    rounded
+                                    size="medium"
+                                    src={flyer}
+                                />
+                                <p style={{ fontSize: "1.33em" }} > </p>{" "}
+                                <div>
+                                    {this.state.queues.map(item => (
+                                        <div key={item.id}>
+                                            <h1>{item.name}</h1>
+                                            <p>{item.phone}</p> {''}
+                                            <p>{item.payable_check}</p>
+                                        </div>
+                                    ))}
+                                </div>
+
+                            </Grid.Column>{" "}
+                        </Grid.Row>
+                    </Grid>
+                </Segment>
+                <Segment style={{ padding: "5em 0em" }} vertical>
+                    <Container>
+                        <Form onSubmit={this.handleSubmit} success error>
+                            {(() => {
+                                if (this.state.success === 'success') {
+                                    return (
+                                        <Message
+                                            success                                         // displays success message if form has been submitted successfully
+                                            header='Form Submitted'
+                                            content="Thank you for submitting a form"
+                                        />
+                                    )
+                                } else if (this.state.success === 'error') {
+                                    return (
+                                        <Message
+                                            error                                           // displays error message if form has NOT been submitted successfully
+                                            header='Invalid Input'
+                                            content='Please fill out the required fields below'
+                                        />
+                                    )
+                                }
+                            })()}
+                            <Form.Field>
+                                <label style={{ fontSize: "20px" }}>Agent Name</label>
+                                <Form.Input
+                                    error={this.state.nameError}
+                                    placeholder='Agent Name'
+                                    name='name'
+                                    onChange={e => this.handleChange(e)}
+                                />
+                            </Form.Field>
+                            <Form.Field>
+                                <label style={{ fontSize: "20px" }}>Phone</label>
+                                <Form.Input
+                                    error={this.state.phoneError}
+                                    placeholder='Phone Number'
+                                    name='phone'
+                                    onChange={e => this.handleChange(e)}
+                                />
+                            </Form.Field>
+                            <Form.Field>
+                                <Checkbox
+                                    style={{ fontSize: "20px" }}
+                                    className={'payable_checkbox'}
+                                    label='Make check payable to: SLHA'
+                                    name='payable_check'
+                                    checked={this.state.checked}
+                                    onChange={this.handleChangeCheckbox}
+                                />
+                            </Form.Field>
+                            <Button type='submit'>Submit</Button>
+                        </Form>
+                    </Container>
 
 
-            </Segment>
-            <Segment style={{ padding: "8em 0em" }} vertical>
-                <Container text textAlign="center">
-                    <Header as="h3" style={{ fontSize: "2em" }}>
-                        Tony's Design Queue
+                </Segment>
+                <Segment style={{ padding: "8em 0em" }} vertical>
+                    <Container text textAlign="center">
+                        <Header as="h3" style={{ fontSize: "2em" }}>
+                            Tony's Design Queue
             </Header>
-                    <Header as="h4" style={{ fontSize: "2em" }}>
-                        El queue de diseño para Tony
+                        <Header as="h4" style={{ fontSize: "2em" }}>
+                            El queue de diseño para Tony
             </Header>
-                    <p style={{ fontSize: "1.33em" }}>
-                        Please, only use this when necessary.
+                        <p style={{ fontSize: "1.33em" }}>
+                            Please, only use this when necessary.
                 <p>Por favor, utiliza esto cuando sea necessario.</p>
-                    </p>
-                </Container>
-            </Segment>
-        </ResponsiveContainer >
-    );
+                        </p>
+                    </Container>
+                </Segment>
+            </ResponsiveContainer >
+        );
+    }
 }
 
 export default FlyerPage;
+

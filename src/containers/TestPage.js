@@ -24,8 +24,8 @@ const initialState = {
     success: '',
     name: '',
     phone: '',
-    payable_check: '',
-    isChecked: false,
+    payable_check: 'NO',
+    checked: false,
     nameError: false,
     phoneError: false,
     checkError: false,
@@ -142,24 +142,29 @@ class TestPage extends Component {
         }
     };
 
+    // function to uncheck the checkbox after user submits a form
+    unCheck = () => {
+        var checkbox = document.getElementsByClassName('.payable_check')
+        checkbox.checked = false
+    }
+
     handleCheck = () => {
-        if (this.state.isChecked == true) {
+        if (!this.state.checked) {
             this.setState({ payable_check: 'YES' })
-            return true
-        } else if (this.state.isChecked == false) {
+        } else {
             this.setState({ payable_check: 'NO' })
-            return false
         }
     }
 
+    handleChangeCheckbox = () => {
+        this.setState({ checked: !this.state.checked });
+        this.handleCheck();
+    };
+
     handleChange = e => {
-        const target = e.target;
-        const value = target.type === 'checkbox' ? target.checked : target.value;
         this.setState({
             [e.target.name]: e.target.value,
-            // isChecked: !this.state.isChecked
         });
-        this.handleCheck();
     };
 
     handleSubmit = event => {
@@ -172,29 +177,26 @@ class TestPage extends Component {
         };
 
         const isValid = this.validate();
-
         if (isValid) {                                             // if all input fields are filled out correctly on submit, reset values and clear form
             this.setState(initialState);                           // sets all input values back to empty string
             event.target.reset();                                  // clears form on UI
+            this.unCheck()                                         // calls unCheck function to uncheck box
         }
 
-        // console.log('QUEUE: ' + this.state.name + ' ' + this.state.phone + ' ' + this.state.payable_check)
-        console.log('Payable check: ' + this.state.payable_check)
-
-        // axios.post('http://127.0.0.1:8000/api/flyerqueues/', queue)      // sends post request to database
-        //     .then(res => {
-        //         console.log(res);
-        //         console.log(res.data);
-        //         this.setState({
-        //             success: 'success'
-        //         });
-        //     })
-        //     .catch(e => {
-        //         console.log(e)
-        //         this.setState({
-        //             success: 'error'
-        //         });
-        //     })
+        axios.post('http://127.0.0.1:8000/api/flyerqueues/', queue)      // sends post request to database
+            .then(res => {
+                console.log(res);
+                console.log(res.data);
+                this.setState({
+                    success: 'success'
+                });
+            })
+            .catch(e => {
+                console.log(e)
+                this.setState({
+                    success: 'error'
+                });
+            })
     }
 
     render() {
@@ -272,9 +274,11 @@ class TestPage extends Component {
                             <Form.Field>
                                 <Checkbox
                                     style={{ fontSize: "20px" }}
+                                    className={'payable_checkbox'}
                                     label='Make check payable to: SLHA'
                                     name='payable_check'
-                                    onChange={e => this.handleChange(e)}
+                                    checked={this.state.checked}
+                                    onChange={this.handleChangeCheckbox}
                                 />
                             </Form.Field>
                             <Button type='submit'>Submit</Button>
