@@ -100,63 +100,72 @@ ResponsiveContainer.propTypes = {
     children: PropTypes.node
 };
 
-const FlyerPage = () => (
-    < ResponsiveContainer >
-        <Segment style={{ padding: "8em 0em 5em 0em" }} vertical>
-            <Grid container stackable verticalAlign="middle">
-                <Grid.Row>
-                    <Grid.Column width={8} textAlign="center">
-                        <Header as="h1"
-                            style={{ fontSize: "2.5em" }} >
-                            Flyer Form {" "}
-                        </Header>{" "}
-                        <Image
-                            centered
-                            rounded
-                            size="medium"
-                            src={flyer}
-                        />
-                        <p style={{ fontSize: "1.33em" }} > </p>{" "}
-                    </Grid.Column>{" "}
-                </Grid.Row>
-            </Grid>
-        </Segment>
-        <Segment style={{ padding: "5em 0em" }} vertical>
+class FlyerPage extends Component {
+    constructor() {
+        super();
+        this.state = {
+            value: 1
+        }
+    }
 
-            <Container>
-                <Form>
-                    <Form.Field>
-                        <label style={{ fontSize: "20px" }}>Agent Name</label>
-                        <input placeholder='Agent Name' />
-                    </Form.Field>
-                    <Form.Field>
-                        <label style={{ fontSize: "20px" }}>Phone</label>
-                        <input placeholder='Phone' />
-                    </Form.Field>
-                    <Form.Field>
-                        <Checkbox style={{ fontSize: "20px" }} label='Make check payable to: SLHA' />
-                    </Form.Field>
-                    <Button type='submit'>Submit</Button>
-                </Form>
-            </Container>
+    render = () => (
+        < ResponsiveContainer >
+            <Segment style={{ padding: "8em 0em 5em 0em" }} vertical>
+                <Grid container stackable verticalAlign="middle">
+                    <Grid.Row>
+                        <Grid.Column width={8} textAlign="center">
+                            <Header as="h1"
+                                style={{ fontSize: "2.5em" }} >
+                                Flyer Form {" "}
+                            </Header>{" "}
+                            <Image
+                                centered
+                                rounded
+                                size="medium"
+                                src={flyer}
+                            />
+                            <p style={{ fontSize: "1.33em" }} > </p>{" "}
+                        </Grid.Column>{" "}
+                    </Grid.Row>
+                </Grid>
+            </Segment>
+            <Segment style={{ padding: "5em 0em" }} vertical>
+
+                <Container>
+                    <Form>
+                        <Form.Field>
+                            <label style={{ fontSize: "20px" }}>Agent Name</label>
+                            <input placeholder='Agent Name' />
+                        </Form.Field>
+                        <Form.Field>
+                            <label style={{ fontSize: "20px" }}>Phone</label>
+                            <input placeholder='Phone' />
+                        </Form.Field>
+                        <Form.Field>
+                            <Checkbox style={{ fontSize: "20px" }} label='Make check payable to: SLHA' />
+                        </Form.Field>
+                        <Button type='submit'>Submit</Button>
+                    </Form>
+                </Container>
 
 
-        </Segment>
-        <Segment style={{ padding: "8em 0em" }} vertical>
-            <Container text textAlign="center">
-                <Header as="h3" style={{ fontSize: "2em" }}>
-                    Tony's Design Queue
+            </Segment>
+            <Segment style={{ padding: "8em 0em" }} vertical>
+                <Container text textAlign="center">
+                    <Header as="h3" style={{ fontSize: "2em" }}>
+                        Tony's Design Queue
             </Header>
-                <Header as="h4" style={{ fontSize: "2em" }}>
-                    El queue de diseño para Tony
+                    <Header as="h4" style={{ fontSize: "2em" }}>
+                        El queue de diseño para Tony
             </Header>
-                <p style={{ fontSize: "1.33em" }}>
-                    Please, only use this when necessary.
+                    <p style={{ fontSize: "1.33em" }}>
+                        Please, only use this when necessary.
                 <p>Por favor, utiliza esto cuando sea necessario.</p>
-                </p>
-            </Container>
-        </Segment>
-    </ResponsiveContainer >
-);
+                    </p>
+                </Container>
+            </Segment>
+        </ResponsiveContainer >
+    );
+}
 
 export default FlyerPage;

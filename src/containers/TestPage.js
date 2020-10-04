@@ -13,28 +13,23 @@ import {
     Sidebar,
     Visibility,
     Form,
+    Checkbox,
     Message
 } from "semantic-ui-react";
 
-import business_card_1 from './images/business-card-img-1.png'
-import business_card_2 from './images/business-card-img-2.png'
+import flyer from './images/flyer-img.png';
+
 
 const initialState = {
     success: '',
     name: '',
-    title: '',
-    agent: '',
-    fax: '',
-    direct: '',
-    office: '',
-    email: '',
-    address: '',
+    phone: '',
+    payable_check: '',
+    isChecked: false,
     nameError: false,
-    titleError: false,
-    directError: false,
-    officeError: false,
-    emailError: false,
-    addressError: false
+    phoneError: false,
+    checkError: false,
+    queues: []
 }
 
 const getWidth = () => {
@@ -107,47 +102,39 @@ ResponsiveContainer.propTypes = {
     children: PropTypes.node
 };
 
-class BusinessCardPage extends Component {
+class TestPage extends Component {
     constructor(props) {
         super(props)
 
-        this.state = initialState       // sets initial state of field values to empty, errors to false
+        this.state = initialState       // set initial state of field values to empty, errors to false
+
+        this.handleChange = this.handleChange.bind(this);
 
         this.handleSubmit = this.handleSubmit.bind(this)
+
     }
+
+    async componentDidMount() {
+        try {
+            const res = await fetch('http://127.0.0.1:8000/api/flyerqueues/');
+            const queues = await res.json();
+            this.setState({
+                queues
+            });
+        } catch (e) {
+            console.log(e);
+        }
+    }
+
 
     // validate function checks if all required input form fields are filled out correctly
     validate = () => {
-        if (this.state.name === '' || this.state.title === '' || this.state.direct === '' || this.state.office === '' || this.state.address === '' || !this.state.email.includes('@')) {
+        if (this.state.name === '' || this.state.phone === '') {
             if (this.state.name === '') {
                 this.setState({ nameError: true })
-            } else {
-                this.setState({ nameError: false })
             }
-            if (this.state.title === '') {
-                this.setState({ titleError: true })
-            } else {
-                this.setState({ titleError: false })
-            }
-            if (this.state.direct === '') {
-                this.setState({ directError: true })
-            } else {
-                this.setState({ directError: false })
-            }
-            if (this.state.office === '') {
-                this.setState({ officeError: true })
-            } else {
-                this.setState({ officeError: false })
-            }
-            if (!this.state.email.includes('@' && '.')) {
-                this.setState({ emailError: true })
-            } else {
-                this.setState({ emailError: false })
-            }
-            if (this.state.address === '') {
-                this.setState({ addressError: true })
-            } else {
-                this.setState({ addressError: false })
+            if (this.state.phone === '') {
+                this.setState({ phoneError: true })
             }
             return false
         } else {
@@ -155,10 +142,24 @@ class BusinessCardPage extends Component {
         }
     };
 
+    handleCheck = () => {
+        if (this.state.isChecked == true) {
+            this.setState({ payable_check: 'YES' })
+            return true
+        } else if (this.state.isChecked == false) {
+            this.setState({ payable_check: 'NO' })
+            return false
+        }
+    }
+
     handleChange = e => {
+        const target = e.target;
+        const value = target.type === 'checkbox' ? target.checked : target.value;
         this.setState({
             [e.target.name]: e.target.value,
+            // isChecked: !this.state.isChecked
         });
+        this.handleCheck();
     };
 
     handleSubmit = event => {
@@ -166,12 +167,8 @@ class BusinessCardPage extends Component {
 
         const queue = {
             name: this.state.name,
-            title: this.state.title,
-            fax: this.state.fax,                                   // data to be submitted to database
-            direct: this.state.direct,
-            office: this.state.office,
-            email: this.state.email,
-            address: this.state.address,
+            phone: this.state.phone,                                // data to be submitted to database
+            payable_check: this.state.payable_check,
         };
 
         const isValid = this.validate();
@@ -181,50 +178,58 @@ class BusinessCardPage extends Component {
             event.target.reset();                                  // clears form on UI
         }
 
-        axios.post('http://127.0.0.1:8000/api/businesscardqueues/', queue)      // sends post request to database
-            .then(res => {
-                console.log(res);
-                console.log(res.data);
-                this.setState({
-                    success: 'success'
-                });
-            })
-            .catch(e => {
-                console.log(e)
-                this.setState({
-                    success: 'error'
-                });
-            })
+        // console.log('QUEUE: ' + this.state.name + ' ' + this.state.phone + ' ' + this.state.payable_check)
+        console.log('Payable check: ' + this.state.payable_check)
+
+        // axios.post('http://127.0.0.1:8000/api/flyerqueues/', queue)      // sends post request to database
+        //     .then(res => {
+        //         console.log(res);
+        //         console.log(res.data);
+        //         this.setState({
+        //             success: 'success'
+        //         });
+        //     })
+        //     .catch(e => {
+        //         console.log(e)
+        //         this.setState({
+        //             success: 'error'
+        //         });
+        //     })
     }
 
     render() {
         return (
-            < ResponsiveContainer>
+            < ResponsiveContainer >
                 <Segment style={{ padding: "8em 0em 5em 0em" }} vertical>
                     <Grid container stackable verticalAlign="middle">
                         <Grid.Row>
                             <Grid.Column width={8} textAlign="center">
                                 <Header as="h1"
                                     style={{ fontSize: "2.5em" }} >
-                                    Business Card Form {" "}
+                                    Flyer Form {" "}
                                 </Header>{" "}
                                 <Image
                                     centered
-                                    size="large"
-                                    src={business_card_1}
-                                />
-                                <Image
-                                    centered
-                                    size="large"
-                                    src={business_card_2}
+                                    rounded
+                                    size="medium"
+                                    src={flyer}
                                 />
                                 <p style={{ fontSize: "1.33em" }} > </p>{" "}
+                                <div>
+                                    {this.state.queues.map(item => (
+                                        <div key={item.id}>
+                                            <h1>{item.name}</h1>
+                                            <p>{item.phone}</p> {''}
+                                            <p>{item.payable_check}</p>
+                                        </div>
+                                    ))}
+                                </div>
+
                             </Grid.Column>{" "}
                         </Grid.Row>
                     </Grid>
                 </Segment>
                 <Segment style={{ padding: "5em 0em" }} vertical>
-
                     <Container>
                         <Form onSubmit={this.handleSubmit} success error>
                             {(() => {
@@ -256,63 +261,27 @@ class BusinessCardPage extends Component {
                                 />
                             </Form.Field>
                             <Form.Field>
-                                <label style={{ fontSize: "20px" }}>
-                                    <p style={{ padding: "0.5em 0em 0em 0em" }}>Title (Licensed Insurance Agent or Other)</p>
-                                </label>
+                                <label style={{ fontSize: "20px" }}>Phone</label>
                                 <Form.Input
-                                    error={this.state.titleError}
-                                    placeholder='Title'
-                                    name='title'
+                                    error={this.state.phoneError}
+                                    placeholder='Phone Number'
+                                    name='phone'
                                     onChange={e => this.handleChange(e)}
                                 />
                             </Form.Field>
                             <Form.Field>
-                                <label style={{ fontSize: "20px" }}>Fax</label>
-                                <Form.Input
-                                    placeholder='Fax'
-                                    name='fax'
-                                    onChange={e => this.handleChange(e)}
-                                />
-                            </Form.Field>
-                            <Form.Field>
-                                <label style={{ fontSize: "20px" }}>Direct</label>
-                                <Form.Input
-                                    error={this.state.directError}
-                                    placeholder='Direct'
-                                    name='direct'
-                                    onChange={e => this.handleChange(e)}
-                                />
-                            </Form.Field>
-                            <Form.Field>
-                                <label style={{ fontSize: "20px" }}>Office</label>
-                                <Form.Input
-                                    error={this.state.officeError}
-                                    placeholder='Office'
-                                    name='office'
-                                    onChange={e => this.handleChange(e)}
-                                />
-                            </Form.Field>
-                            <Form.Field>
-                                <label style={{ fontSize: "20px" }}>Email</label>
-                                <Form.Input
-                                    error={this.state.emailError}
-                                    placeholder='Email'
-                                    name='email'
-                                    onChange={e => this.handleChange(e)}
-                                />
-                            </Form.Field>
-                            <Form.Field>
-                                <label style={{ fontSize: "20px" }}>Address</label>
-                                <Form.Input
-                                    error={this.state.addressError}
-                                    placeholder='Address'
-                                    name='address'
+                                <Checkbox
+                                    style={{ fontSize: "20px" }}
+                                    label='Make check payable to: SLHA'
+                                    name='payable_check'
                                     onChange={e => this.handleChange(e)}
                                 />
                             </Form.Field>
                             <Button type='submit'>Submit</Button>
                         </Form>
                     </Container>
+
+
                 </Segment>
                 <Segment style={{ padding: "8em 0em" }} vertical>
                     <Container text textAlign="center">
@@ -333,5 +302,5 @@ class BusinessCardPage extends Component {
     }
 }
 
-export default BusinessCardPage;
+export default TestPage;
 

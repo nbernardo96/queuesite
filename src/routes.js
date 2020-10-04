@@ -7,6 +7,7 @@ import Signup from "./containers/Signup";
 import HomepageLayout from "./containers/Home";
 import FlyerPage from "./containers/Flyer";
 import BusinessCardPage from "./containers/BusinessCard";
+import TestPage from "./containers/TestPage";
 
 
 const BaseRouter = () => (
@@ -16,6 +17,7 @@ const BaseRouter = () => (
         <Route exact path="/" component={HomepageLayout} />
         <Route path="/flyer" component={FlyerPage} />
         <Route path="/businesscard" component={BusinessCardPage} />
+        <Route path="/testpage" component={TestPage} />
 
     </Hoc>
 );
