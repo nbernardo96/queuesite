@@ -8,6 +8,7 @@ import {
     Header,
     Icon,
     Image,
+    Label,
     List,
     Menu,
     Responsive,
@@ -17,6 +18,9 @@ import {
     Dropdown,
     Modal
 } from "semantic-ui-react";
+
+import "./Login"
+import { connect } from "react-redux";
 
 import flyer from './images/flyer-img.png';
 import business_card_1 from './images/business-card-img-1.png'
@@ -97,96 +101,127 @@ ResponsiveContainer.propTypes = {
     children: PropTypes.node
 };
 
-// function Welcome(props) {
-//     return <Header>You chose, {props.options}</Header>
-// }
+const mapStateToProps = (state) => {
+    return {
+        authenticated: state.auth.token !== null,
+    };
+};
 
-function HandleDropdown(props) {
-    return <h1>You chose, {props.option}</h1>;
+
+class HomepageLayout extends Component {
+    constructor() {
+        super();
+        this.state = {
+            value: 1
+        }
+    }
+
+    handleChange = (e, { value }) => this.setState({ value })
+    reroute = (e) => {
+        const { authenticated } = this.props;
+
+        // checks if user is logged in when choosing a form, else redirects them to login page
+        if (this.state.value === 1 && authenticated) {
+            window.location.href = '/businesscard'
+        } else if (this.state.value === 2 && authenticated) {
+            window.location.href = '/flyer'
+        } else {
+            window.location.href = '/login'
+        }
+    }
+
+
+    render = () => (
+        < ResponsiveContainer >
+            <Segment style={{ padding: "8em 0em" }} vertical>
+                <Grid container stackable verticalAlign="middle">
+                    <Grid.Row>
+                        <Grid.Column width={8} textAlign="center">
+                            <Header as="h1"
+                                style={{ fontSize: "2.5em" }} >
+                                Sunshine Life & Health Advisors {" "}
+                            </Header>{" "}
+                            <p style={{ fontSize: "1.33em" }} > </p>{" "} <Header as="h3" style={{ fontSize: "1.50em" }} > We Make Personalized Business Cards and Flyers {" "}
+                            </Header>{" "}
+                            <p style={{ fontSize: "1.20em" }} > Choose and fill out an order form below {" "} </p>{" "}
+
+                        </Grid.Column>{" "}
+                    </Grid.Row>
+                    <Grid.Row>
+                        <Grid.Column textAlign="center">
+                            <Modal trigger={<Button size="large">Fill Out Form</Button>} closeIcon>
+                                <Modal.Header>
+                                    Choose A Form
+                            </Modal.Header>
+                                <Modal.Content>
+                                    <Dropdown
+                                        placeholder='Select choice'
+                                        fluid
+                                        compact
+                                        selection
+                                        onChange={this.handleChange}
+                                        options={options}
+                                        value={this.state.value}
+                                    />{"\n"}
+                                </Modal.Content>
+                                <Modal.Content>
+                                    <Button onClick={this.reroute}>Select</Button>
+                                </Modal.Content>
+                            </Modal>
+                        </Grid.Column>
+                    </Grid.Row>
+                </Grid>
+            </Segment>
+            <Segment style={{ padding: "0em" }} vertical>
+                <Grid celled="internally" columns="equal" stackable>
+                    <Grid.Row textAlign="center">
+                        <Grid.Column style={{ paddingBottom: "5em", paddingTop: "5em" }}>
+                            <Header as="h3" style={{ fontSize: "2em" }}>
+                                Flyers
+                        </Header>
+                            <Image
+                                centered
+                                rounded
+                                size="medium"
+                                src={flyer}
+                            />
+                        </Grid.Column>
+                        <Grid.Column style={{ paddingBottom: "5em", paddingTop: "5em" }}>
+                            <Header as="h3" style={{ fontSize: "2em" }}>
+                                Business Cards
+                        </Header>
+                            <Image
+                                centered
+                                size="large"
+                                src={business_card_1}
+                            />
+                            <Image
+                                centered
+                                size="large"
+                                src={business_card_2}
+                            />
+                        </Grid.Column>
+                    </Grid.Row>
+                </Grid>
+            </Segment>
+            <Segment style={{ padding: "8em 0em" }} vertical>
+                <Container text textAlign="center">
+                    <Header as="h3" style={{ fontSize: "2em" }}>
+                        Tony's Design Queue
+                </Header>
+                    <Header as="h4" style={{ fontSize: "2em" }}>
+                        El queue de diseño para Tony
+                </Header>
+                    <p style={{ fontSize: "1.33em" }}>
+                        Please, only use this when necessary.
+                </p>
+                    <p>Por favor, utiliza esto cuando sea necessario.</p>
+                </Container>
+            </Segment>
+        </ResponsiveContainer >
+    );
 }
 
-const HomepageLayout = () => (
-    < ResponsiveContainer >
-        <Segment style={{ padding: "8em 0em" }} vertical>
-            <Grid container stackable verticalAlign="middle">
-                <Grid.Row>
-                    <Grid.Column width={8} textAlign="center">
-                        <Header as="h1"
-                            style={{ fontSize: "2.5em" }} >
-                            Sunshine Life & Health Advisors {" "}
-                        </Header>{" "}
-                        <p style={{ fontSize: "1.33em" }} > </p>{" "} <Header as="h3" style={{ fontSize: "1.50em" }} > We Make Personalized Business Cards and Flyers {" "}
-                        </Header>{" "}
-                        <p style={{ fontSize: "1.20em" }} > Choose and fill out an order form below {" "} </p>{" "}
-
-                    </Grid.Column>{" "}
-                </Grid.Row>
-                <Grid.Row>
-                    <Grid.Column textAlign="center">
-                        <Modal trigger={<Button size="large">Fill Out Form</Button>}>
-                            <Modal.Header>Choose A Form</Modal.Header>
-                            <Modal.Content Dropdown>
-                                <Dropdown
-                                    placeholder='Select choice'
-                                    fluid
-                                    selection
-                                    options={options} />{"\n"}
-                            </Modal.Content>
-                            <Modal.Content>
-
-                            </Modal.Content>
-                        </Modal>
-                    </Grid.Column>
-                </Grid.Row>
-            </Grid>
-        </Segment>
-        <Segment style={{ padding: "0em" }} vertical>
-            <Grid celled="internally" columns="equal" stackable>
-                <Grid.Row textAlign="center">
-                    <Grid.Column style={{ paddingBottom: "5em", paddingTop: "5em" }}>
-                        <Header as="h3" style={{ fontSize: "2em" }}>
-                            Flyers
-                        </Header>
-                        <Image
-                            centered
-                            rounded
-                            size="medium"
-                            src={flyer}
-                        />
-                    </Grid.Column>
-                    <Grid.Column style={{ paddingBottom: "5em", paddingTop: "5em" }}>
-                        <Header as="h3" style={{ fontSize: "2em" }}>
-                            Business Cards
-                        </Header>
-                        <Image
-                            centered
-                            size="large"
-                            src={business_card_1}
-                        />
-                        <Image
-                            centered
-                            size="large"
-                            src={business_card_2}
-                        />
-                    </Grid.Column>
-                </Grid.Row>
-            </Grid>
-        </Segment>
-        <Segment style={{ padding: "8em 0em" }} vertical>
-            <Container text textAlign="center">
-                <Header as="h3" style={{ fontSize: "2em" }}>
-                    Tony's Design Queue
-                </Header>
-                <Header as="h4" style={{ fontSize: "2em" }}>
-                    El queue de diseño para Tony
-                </Header>
-                <p style={{ fontSize: "1.33em" }}>
-                    Please, only use this when necessary.
-                    <p>Por favor, utiliza esto cuando sea necessario.</p>
-                </p>
-            </Container>
-        </Segment>
-    </ResponsiveContainer >
-);
-
-export default HomepageLayout;
+export default connect(
+    mapStateToProps
+)(HomepageLayout);
